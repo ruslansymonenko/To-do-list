@@ -2,6 +2,7 @@ let $inputNewTask = document.querySelector('#inputNewTask')
 let $addTaskBtn = document.querySelector('#addTaskBtn')
 let $allTasks = document.querySelector('#allTasks')
 
+
 function Tasks (taskValue) {
     this.taskValue = taskValue
     this.checked = false
@@ -59,7 +60,7 @@ function putId () {
 
 function checkId(elem) {
     let getId = elem.parentNode.id
-    // console.log(elem.parentNode.id);
+    
     return getId
 }
 
@@ -131,7 +132,7 @@ function allStorage() {
     return values;
 }
 
-function createElementsOnLoad (taskText, id) {
+function createElementsOnLoad (taskText, id, check) {
     let newTaskBody = document.createElement('div')
     newTaskBody.setAttribute('class', 'body__tasks')
     newTaskBody.setAttribute('id', putId())
@@ -140,6 +141,11 @@ function createElementsOnLoad (taskText, id) {
 
     let newTaskCheck = document.createElement('input')
     newTaskCheck.type = 'checkbox'
+    if (check == true) {
+        newTaskCheck.checked = true
+    } else {
+        newTaskCheck.checked = false
+    }
     newTaskCheck.setAttribute('class', 'task__check')
     newTaskCheck.setAttribute('onClick', 'checkBox(this)')
 
@@ -169,12 +175,32 @@ function extractElementsFromStorage () {
                 let id = key
                 let value = JSON.parse(extractElement[key])
                 let text = value.taskValue
+                let checkOrNot = value.checked
                 
-                window.onload = createElementsOnLoad(text, id)
+                window.onload = createElementsOnLoad(text, id, checkOrNot)
             }
     }
 }
 
 extractElementsFromStorage ()
+
+
+$allTasks.addEventListener('click', e => {
+    deleteTask (e.target)
+    
+})
+
+
+function deleteTask (element) {
+    let getClass = element.className
+    let classToCheck = 'delete__task'
+    console.log(getClass)
+
+    if (getClass === classToCheck) {
+        let elemmentId = element.parentNode.id
+        localStorage.removeItem(elemmentId)
+        element.parentNode.remove();
+    }
+}
 
 
